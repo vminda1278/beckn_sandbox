@@ -1,6 +1,10 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { LocalRetailService } from "./local-retail.service";
 import { Local_Retail110_Request_DTO } from "./dto/1-1-0/local-retail-1-1-0-request.dto";
+import { Logger } from '@nestjs/common';
+import { LocalRetailENUM } from "./local-retail-modules.enum";
+// ...inside the class...
+
 
 @Controller("retail/1.1.0")
 export class LocalRetailController110 {
@@ -8,12 +12,16 @@ export class LocalRetailController110 {
 
     @Post("/search")
     search(@Body() request: Local_Retail110_Request_DTO) {
-        return this.localRetailService.get110(request.context.domain).search(request);
+        //console.log("Received search request:", request);
+        Logger.log("Received search request:", JSON.stringify(request));
+        let domain = request.context.domain + ":" + request.context.version;
+        return this.localRetailService.get110(domain as LocalRetailENUM).search(request);
     }
 
     @Post("/init")
     init(@Body() request: Local_Retail110_Request_DTO) {
-        return this.localRetailService.get110(request.context.domain).init(request);
+        let domain = request.context.domain + ":" + request.context.version;
+        return this.localRetailService.get110(domain as LocalRetailENUM).init(request);
     }
 
     @Post("/cancel")
